@@ -17,20 +17,51 @@
 
 <script>
   const endpoint = 'https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json';
-  
-  // async function to fetch data from GitHub API
-  const getData = async function () {
+  const input = document.querySelector("input");
+  const suggestionsUl = document.querySelector(".suggestions");
+
+  // async function to fetch and parse the data of cities and their state & population
+  const getData = async function (text) {
     const request = await fetch(endpoint);
-    const data = await request.json(); // parse the data
-    return data;
+    const dataOld = await request.json(); // parse the data
+    getNewData(dataOld, text);
+  };
+
+  // function to get the city, state, and population from the data parsed above
+  const getNewData = function (dataOld, text) {
+    const dataNew = [];
+    for (let place of dataOld) {
+      let dataObject = {
+      city: `${place.city}`,
+      state: `${place.state}`,
+      population: `${place.population}`
+      };
+      dataNew.push(dataObject);
+    }
+    searchResults(dataNew, text);
   };
 
   // function to check for search results
-  const searchResults = function () {
-    
+  const searchResults = function (dataNew, text) {
+    const resultsArray = [];
+    for (let place of dataNew) {
+      if (place.city.toLowerCase().includes(text) || place.state.toLowerCase().includes(text)) {
+        let li = document.createElement("li");
+        li.innerHTML = `${place.city}, ${place.state} <span class="population">${place.population}</span>`;
+        suggestionsUl.append(li);
+      }
+    }
+
   };
 
-  getData();
+  // event listener for inputting text into the search box
+  input.addEventListener("input", function (e) {
+    const text = e.target.value.toLowerCase();
+    console.log(text);
+    suggestionsUl.innerHTML = "";
+    getData(text);
+  });
+
 </script>
 
 </body>
