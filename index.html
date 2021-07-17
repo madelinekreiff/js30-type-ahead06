@@ -48,6 +48,11 @@
       if (place.city.toLowerCase().includes(text) || place.state.toLowerCase().includes(text)) {
         let li = document.createElement("li");
         li.innerHTML = `${place.city}, ${place.state} <span class="population">${place.population}</span>`;
+        // for (let i = 0; i < li.innerText.length; i++) {
+        //   if (li.innerText[i] === text) {
+        //     li.innerText.replace(li.innerText[i], `<span class="hl">${li.innerText[i]}</span>`);
+          }
+        }
         suggestionsUl.append(li);
       }
     }
