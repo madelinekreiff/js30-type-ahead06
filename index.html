@@ -43,26 +43,33 @@
 
   // function to check for search results
   const searchResults = function (dataNew, text) {
-    const resultsArray = [];
-    for (let place of dataNew) {
-      if (place.city.toLowerCase().includes(text) || place.state.toLowerCase().includes(text)) {
-        let li = document.createElement("li");
-        li.innerHTML = `${place.city}, ${place.state} <span class="population">${place.population}</span>`;
-        // for (let i = 0; i < li.innerText.length; i++) {
-        //   if (li.innerText[i] === text) {
-        //     li.innerText.replace(li.innerText[i], `<span class="hl">${li.innerText[i]}</span>`);
-          }
-        }
-        suggestionsUl.append(li);
-      }
-    }
+    let regex = new RegExp(text, "gi");
 
+    for (let place of dataNew) {
+      // check to see if there's a match
+      if (place.city.match(regex) || place.state.match(regex)) {
+        let li = document.createElement("li");
+
+        // add highlight class to matched regex
+        let cityHTML = `${place.city}`;
+        let stateHTML = `${place.state}`;
+        cityHTML = cityHTML.replace(regex, `<span class="hl">${text}</span>`);
+        stateHTML = stateHTML.replace(regex, `<span class="hl">${text}</span>`);
+
+        // add commas to separate population values
+        let popHTML = `${place.population}`;
+        popHTML = popHTML.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        
+        // create li.innerHTML and append to the ul list
+        li.innerHTML = `<span class="name">${cityHTML}, ${stateHTML}</span><span class="population">${popHTML}</span>`;
+        suggestionsUl.append(li);
+      } // end if statement
+    } // end for loop
   };
 
   // event listener for inputting text into the search box
   input.addEventListener("input", function (e) {
-    const text = e.target.value.toLowerCase();
-    console.log(text);
+    const text = e.target.value;
     suggestionsUl.innerHTML = "";
     getData(text);
   });

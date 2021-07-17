@@ -51,7 +51,7 @@ input.search {
   list-style: none;
   margin: 0;
   padding: 20px;
-  text-transform: capitalize;
+  /* text-transform: capitalize; */
   transition: background 0.2s;
 }
 
